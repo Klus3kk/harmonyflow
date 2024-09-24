@@ -7,5 +7,5 @@ This repository consists of the music recommendation system, which uses Spotify 
 Install the Spotipy:
 
 ```bash
-pip install spotipy
+pip install Flask spotipy flask-cors
 ```
