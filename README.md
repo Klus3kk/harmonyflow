@@ -57,3 +57,9 @@ docker-compose up --build
 ## Contributing
 
 Feel free to submit pull requests or open issues for any bugs or feature requests.
+
+## Useful commands
+
+```bash
+python -m flask run
+```
