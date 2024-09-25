@@ -10,11 +10,11 @@
 - Progressive Web App (PWA) support for offline access.
 - Responsive and modern UI designed with Tailwind CSS.
 - Backend API built with Flask and powered by Spotipy and PostgreSQL.
-- Deployed with Vercel (frontend) and Heroku (backend).
+- Deployed with Vercel (frontend) and Heroku (backend). 
 
 ## Technologies
 
-- **Flask** (backend API)
+- **Flask** (backend API) 
 - **Next.js** (React frontend)
 - **Tailwind CSS** (styling)
 - **Spotipy** (Spotify API wrapper)
@@ -48,15 +48,11 @@ cd backend && pip install -r requirements.txt
 cd frontend && npm install
 ```
 
-4. Run the app:
+4. Run the app (not working now lol)
 
 ```bash
 docker-compose up --build
 ```
-
-## Contributing
-
-Feel free to submit pull requests or open issues for any bugs or feature requests.
 
 ## Useful commands
 
