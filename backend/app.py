@@ -3,15 +3,14 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
 from dotenv import load_dotenv
-from flask_cors import CORS  
+from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
 # Load environment variables
 load_dotenv()
 
-# Spotify Authentication
 sp_oauth = SpotifyOAuth(
     client_id=os.getenv("SPOTIPY_CLIENT_ID"),
     client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
@@ -24,16 +23,19 @@ def login():
     auth_url = sp_oauth.get_authorize_url()
     return jsonify({"auth_url": auth_url})
 
-@app.route('/callback')
-def callback():
+@app.route('/callback/top-tracks')
+def top_tracks():
     code = request.args.get('code')
     token_info = sp_oauth.get_access_token(code)
     sp = spotipy.Spotify(auth=token_info['access_token'])
     return jsonify(sp.current_user_top_tracks())
 
-@app.route('/')
-def index():
-    return "Harmonyflow Backend"
+@app.route('/callback/top-artists')
+def top_artists():
+    code = request.args.get('code')
+    token_info = sp_oauth.get_access_token(code)
+    sp = spotipy.Spotify(auth=token_info['access_token'])
+    return jsonify(sp.current_user_top_artists())
 
 if __name__ == "__main__":
     app.run(debug=True)
