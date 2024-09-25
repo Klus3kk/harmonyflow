@@ -29,7 +29,7 @@
 1. Clone the repo:
 
 ```bash
-git clone https://github.com/yourusername/harmonyflow.git
+git clone https://github.com/Klus3kk/harmonyflow.git
 ```
 
 2. Set up the Flask backend:
