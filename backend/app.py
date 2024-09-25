@@ -3,8 +3,10 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
 from dotenv import load_dotenv
+from flask_cors import CORS  
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 # Load environment variables
 load_dotenv()
