@@ -30,10 +30,25 @@ def callback():
     sp = spotipy.Spotify(auth=token_info['access_token'])
     
     # Get both top tracks and top artists
-    top_tracks = sp.current_user_top_tracks(limit=10)
-    top_artists = sp.current_user_top_artists(limit=10)
+    top_tracks = sp.current_user_top_tracks(limit=40)
+    top_artists = sp.current_user_top_artists(limit=30)
     
     return jsonify({"tracks": top_tracks['items'], "artists": top_artists['items']})
+
+@app.route('/recommendations')
+def recommendations():
+    token_info = sp_oauth.get_cached_token()
+    if not token_info:
+        return jsonify({"error": "User not authenticated"}), 401
+
+    sp = spotipy.Spotify(auth=token_info['access_token'])
+    user_top_tracks = sp.current_user_top_tracks(limit=5)
+
+    seed_tracks = [track['id'] for track in user_top_tracks['items']]
+    recommendations = sp.recommendations(seed_tracks=seed_tracks, limit=10)
+    
+    return jsonify({"recommendations": recommendations['tracks']})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
