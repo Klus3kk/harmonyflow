@@ -23,19 +23,17 @@ def login():
     auth_url = sp_oauth.get_authorize_url()
     return jsonify({"auth_url": auth_url})
 
-@app.route('/callback/top-tracks')
-def top_tracks():
+@app.route('/callback')
+def callback():
     code = request.args.get('code')
     token_info = sp_oauth.get_access_token(code)
     sp = spotipy.Spotify(auth=token_info['access_token'])
-    return jsonify(sp.current_user_top_tracks())
-
-@app.route('/callback/top-artists')
-def top_artists():
-    code = request.args.get('code')
-    token_info = sp_oauth.get_access_token(code)
-    sp = spotipy.Spotify(auth=token_info['access_token'])
-    return jsonify(sp.current_user_top_artists())
+    
+    # Get both top tracks and top artists
+    top_tracks = sp.current_user_top_tracks(limit=10)
+    top_artists = sp.current_user_top_artists(limit=10)
+    
+    return jsonify({"tracks": top_tracks['items'], "artists": top_artists['items']})
 
 if __name__ == "__main__":
     app.run(debug=True)

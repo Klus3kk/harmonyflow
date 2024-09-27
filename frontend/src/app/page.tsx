@@ -1,38 +1,52 @@
-'use client'
-
-import { useState } from 'react'
+"use client"
+import React, { useEffect, useState } from 'react';
+import Header from './components/Header';
+import RecommendationGrid from './components/RecommendationGrid';
+import SpotifyTopArtists from './components/SpotifyTopArtists';
 
 export default function HomePage() {
-  const [authUrl, setAuthUrl] = useState<string>('')
+  const [activeTab, setActiveTab] = useState('tracks');
+  const [topTracks, setTopTracks] = useState([]);
+  const [topArtists, setTopArtists] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleLogin = async () => {
-    const res = await fetch('http://localhost:5000/login')
-    const data = await res.json()
-    setAuthUrl(data.auth_url)
-  }
+    const res = await fetch('http://localhost:5000/login');
+    const data = await res.json();
+    window.location.href = data.auth_url; // Redirect to Spotify login
+  };
+
+  const fetchData = async () => {
+    const res = await fetch('http://localhost:5000/callback');
+    const data = await res.json();
+    setTopTracks(data.tracks);
+    setTopArtists(data.artists);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const renderContent = () => {
+    if (loading) {
+      return <p>Loading...</p>;
+    }
+
+    if (activeTab === 'tracks') {
+      return <RecommendationGrid tracks={topTracks} />;
+    } else if (activeTab === 'artists') {
+      return <SpotifyTopArtists artists={topArtists} />;
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 flex flex-col items-center justify-center text-white">
-      <h1 className="text-4xl font-bold mb-4">Welcome to Harmonyflow</h1>
-      <p className="mb-8 text-lg">
-        Discover your personalized Spotify music recommendations.
-      </p>
-      <button
-        onClick={handleLogin}
-        className="px-8 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition duration-300"
-      >
-        Login with Spotify
-      </button>
-      {authUrl && (
-        <a
-          href={authUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 text-lg underline"
-        >
-          Authorize Spotify
-        </a>
-      )}
+    <div>
+      <Header handleLogin={handleLogin} activeTab={activeTab} setActiveTab={setActiveTab} />
+      <main className="p-8">
+        <h2 className="text-3xl font-bold mb-6">Your Recommendations</h2>
+        {renderContent()}
+      </main>
     </div>
-  )
+  );
 }
